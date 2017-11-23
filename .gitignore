@@ -3,3 +3,4 @@
 .project
 2017winter.iml
 out/**
+/bin/
