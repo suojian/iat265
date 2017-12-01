@@ -193,42 +193,7 @@ public class MousePanel extends JPanel implements ActionListener {
 		for( int i = 0;i<mouseList.size();i++){
 			mouseList.get(i).makeMoveDicision(catList,mouseList.subList(i+1,mouseList.size()),foodList);
 		}
-		//colliableOrChaseFood(catList,mouseList);
-		//colliableOrChaseFood(mouseList,foodList);
-
 		repaint();
-	}
-	//T refers to subclass of Food, colliableOrChaseFood method need two lists, the list of subclass of animal and the list of subclass of food
-	private <T extends Food> void colliableOrChaseFood(List<? extends Animal> animals, List<T> foods){
-		for(int i = 0;i<animals.size();i++){
-
-			if(animals.get(i).bounceOnWall(pnlSize)){
-				continue;
-			}
-
-			//for animal within animal size, if collision is false
-			boolean iscollision = false;
-			Animal animal1 = animals.get(i);
-			for(int j = i+1;j<animals.size();j++){
-				//for animal start after the current animal
-				Animal animal2  = animals.get(j);
-				//if animal1 collide to animal 2, they bounce , assign collision to true.
-				if(animal1.collide(animal2)){
-					if (animal1.bounceIfNeed(animal2)) {
-						iscollision = true;
-						break;
-					}
-					//jump out of the loop
-				}
-			}
-			//if collision is not true,animal 1 finds the closest food and chase
-			if(!iscollision){
-				T food = animal1.findClosedFood(foods);
-				if(food != null){
-					animal1.chaseFood(food);
-				}
-			}
-		}
 	}
 
 	private class MyMouseAdapter extends MouseAdapter {

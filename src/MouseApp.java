@@ -1,9 +1,10 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 //bonus animal gracefully turn around towards the new food source
 
 
@@ -20,18 +21,7 @@ public class MouseApp extends JFrame {
 		super(title);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(800,800);
-
-
-
-//		addKeyListener(new KeyAdapter(){
-//			@Override
-//			public void keyPressed(KeyEvent e) {
-//				if(e.getKeyCode() == KeyEvent.VK_D){
-//					System.out.println("D is pressed");
-//				}
-//
-//			}
-//		});
+		createMenu();
 		ControlPanel cPanel = new ControlPanel();
 		MousePanel mainPanel = new MousePanel(cPanel, this.getSize());
 		
@@ -43,6 +33,92 @@ public class MouseApp extends JFrame {
 		this.pack();
 		this.setVisible(true);
 
+	}
+
+	private void createMenu(){
+		JMenuBar menuBar;
+		JMenu sysMenu, submenu;
+		JMenuItem menuItem;
+		JRadioButtonMenuItem rbMenuItem;
+		JCheckBoxMenuItem cbMenuItem;
+
+//Create the menu bar.
+		menuBar = new JMenuBar();
+
+//Build the first menu.
+		sysMenu = new JMenu("Game");
+		sysMenu.setMnemonic(KeyEvent.VK_G);
+		sysMenu.getAccessibleContext().setAccessibleDescription(
+				"The game system setup");
+		menuBar.add(sysMenu);
+
+
+
+//a group of JMenuItems
+		menuItem = new JMenuItem("A text-only menu item",
+				KeyEvent.VK_T);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_1, ActionEvent.ALT_MASK));
+		menuItem.getAccessibleContext().setAccessibleDescription(
+				"This doesn't really do anything");
+		sysMenu.add(menuItem);
+
+		menuItem = new JMenuItem("Both text and icon",
+				new ImageIcon("images/middle.gif"));
+		menuItem.setMnemonic(KeyEvent.VK_B);
+		sysMenu.add(menuItem);
+
+		menuItem = new JMenuItem(new ImageIcon("images/middle.gif"));
+		menuItem.setMnemonic(KeyEvent.VK_D);
+		sysMenu.add(menuItem);
+
+//a group of radio button menu items
+		sysMenu.addSeparator();
+		ButtonGroup group = new ButtonGroup();
+		rbMenuItem = new JRadioButtonMenuItem("A radio button menu item");
+		rbMenuItem.setSelected(true);
+		rbMenuItem.setMnemonic(KeyEvent.VK_R);
+		group.add(rbMenuItem);
+		sysMenu.add(rbMenuItem);
+
+		rbMenuItem = new JRadioButtonMenuItem("Another one");
+		rbMenuItem.setMnemonic(KeyEvent.VK_O);
+		group.add(rbMenuItem);
+		sysMenu.add(rbMenuItem);
+
+//a group of check box menu items
+		sysMenu.addSeparator();
+		cbMenuItem = new JCheckBoxMenuItem("A check box menu item");
+		cbMenuItem.setMnemonic(KeyEvent.VK_C);
+		sysMenu.add(cbMenuItem);
+
+		cbMenuItem = new JCheckBoxMenuItem("Another one");
+		cbMenuItem.setMnemonic(KeyEvent.VK_H);
+		sysMenu.add(cbMenuItem);
+
+//a submenu
+		sysMenu.addSeparator();
+		submenu = new JMenu("A submenu");
+		submenu.setMnemonic(KeyEvent.VK_S);
+
+		menuItem = new JMenuItem("An item in the submenu");
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_2, ActionEvent.ALT_MASK));
+		submenu.add(menuItem);
+
+		menuItem = new JMenuItem("Another item");
+		submenu.add(menuItem);
+		sysMenu.add(submenu);
+
+//Build second menu in the menu bar.
+		sysMenu = new JMenu("Another Menu");
+		sysMenu.setMnemonic(KeyEvent.VK_N);
+		sysMenu.getAccessibleContext().setAccessibleDescription(
+				"This menu does nothing");
+		menuBar.add(sysMenu);
+
+
+		this.setJMenuBar(menuBar);
 	}
 
 

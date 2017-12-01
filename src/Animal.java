@@ -19,10 +19,12 @@ public abstract class Animal implements Collide{
 	private double energy;
 	protected float maxSpeed;
 	private long previousCollabTime = 0;
+	private long previousEscapeTime = 0;
 	private boolean showInfo = true;
 	private float accSpeed = 1;
 	private static PVector verticalWall = new PVector(0,60f),horizontalWall = new PVector(60f,0);
 	private Color originalBodyColor;
+
 
 
 	public final static double FULL_ENERGY = 1000;
@@ -321,11 +323,12 @@ public abstract class Animal implements Collide{
 		if (bounceOnWall(MousePanel.pnlSize)){
 			return;
 		}
-		if(predatorList!=null && predatorList.size() > 0 && this instanceof Visionable){
+		if(predatorList!=null && predatorList.size() > 0 && this instanceof Visionable && System.currentTimeMillis() - previousEscapeTime > 1000){
 			Visionable v = (Visionable)this;
 			for (Animal pd: predatorList) {
 				if(v.canSee(pd)){
 					speed.rotate((float)Math.PI);
+					previousEscapeTime = System.currentTimeMillis();
 					return;
 				}
 			}
