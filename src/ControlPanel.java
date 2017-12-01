@@ -39,7 +39,7 @@ public class ControlPanel extends JPanel {
 	}
 
 	private void setComponentAttributes() {
-		status = new JLabel("Status...");
+		status = new JLabel("Selected Animal Status...");
 		bottomContainer = new Container();
 		// flow layout allow to add multiple component together
 		bottomContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 12, 5));

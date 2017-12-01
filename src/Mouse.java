@@ -12,7 +12,7 @@ import java.awt.geom.RoundRectangle2D;
 
 import processing.core.PVector;
 
-public class Mouse extends Animal implements Food {
+public class Mouse extends Animal implements Food,Visionable {
 	private Ellipse2D.Double body;
 	private Ellipse2D.Double eyeLeft;
 	private Ellipse2D.Double eyeRight;
@@ -25,6 +25,7 @@ public class Mouse extends Animal implements Food {
 	private RoundRectangle2D.Double tail;
 	private Arc2D.Double fov;
 	private Area bBox;
+	private Area visionBox;
     private boolean speedReduced = false;
     private double slowSpeedEngeryLevel = 0.3*FULL_ENERGY;
     
@@ -64,10 +65,12 @@ public class Mouse extends Animal implements Food {
 	  
 	      bBox = new Area(body);
 	      bBox.add(new Area(tail));
+		visionBox = new Area(fov);
 //	      bBox.add(new Area(mustacheR1));
 //	      bBox.add(new Area(mustacheR2));
 //	      bBox.add(new Area(mustacheL1));
 //	      bBox.add(new Area(mustacheL2));
+
 	  }
 
     @Override
@@ -170,22 +173,6 @@ public class Mouse extends Animal implements Food {
 	      return at.createTransformedShape(bBox);
 	  }
 	
-	public void checkCollision(Dimension panelSize) {
-		double margin = 100;
-		Rectangle2D.Double top = new Rectangle2D.Double(-margin, -margin, panelSize.width+margin*2, margin);
-		Rectangle2D.Double bottom = new Rectangle2D.Double(-margin, panelSize.height, panelSize.width+margin*2, margin);
-		Rectangle2D.Double left = new Rectangle2D.Double(-margin, -margin, margin, panelSize.height+margin*2);
-		Rectangle2D.Double right = new Rectangle2D.Double(panelSize.width, -margin, margin, panelSize.height+margin*2);
-		float coef = .1f;
-		PVector accel = new PVector();
-		if (getBoundary().intersects(left)) accel.add(1,0);
-		else if (getBoundary().intersects(right)) accel.add(-1,0);
-		else if (getBoundary().intersects(top)) accel.add(0,1);
-		else if (getBoundary().intersects(bottom)) accel.add(0,-1);
-		accel.mult(coef*14);
-		getSpeed().add(accel);
-		}
-
 	//amount energy that attract by the cat, cat maybe attract by mouse with larger energy
 	@Override
 	public double getAttractionValue() {
@@ -198,4 +185,12 @@ public class Mouse extends Animal implements Food {
 		return getEnergy()*0.5;
 	}
 
- }
+	@Override
+	public Shape getVision() {
+		AffineTransform at = new AffineTransform();
+		at.translate(getPos().x, getPos().y);
+		at.rotate(getSpeed().heading());
+		at.scale(getScale(), getScale());
+		return at.createTransformedShape(visionBox);
+	}
+}

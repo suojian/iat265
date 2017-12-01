@@ -1,5 +1,7 @@
-import java.awt.BorderLayout;
-import java.awt.Container;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 //bonus animal gracefully turn around towards the new food source
@@ -17,8 +19,20 @@ public class MouseApp extends JFrame {
 	public MouseApp (String title) {
 		super(title);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(800,800);	
-		ControlPanel cPanel = new ControlPanel();		
+		this.setSize(800,800);
+
+
+
+//		addKeyListener(new KeyAdapter(){
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//				if(e.getKeyCode() == KeyEvent.VK_D){
+//					System.out.println("D is pressed");
+//				}
+//
+//			}
+//		});
+		ControlPanel cPanel = new ControlPanel();
 		MousePanel mainPanel = new MousePanel(cPanel, this.getSize());
 		
 		Container contentPane = this.getContentPane();
@@ -28,7 +42,10 @@ public class MouseApp extends JFrame {
 		this.add(cPanel, BorderLayout.SOUTH);
 		this.pack();
 		this.setVisible(true);
+
 	}
+
+
 	
 
 

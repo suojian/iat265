@@ -1,7 +1,6 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import processing.core.PVector;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -28,12 +27,12 @@ public class MousePanel extends JPanel implements ActionListener {
 	private Dimension size;
 	public boolean c = true;
 	private static ControlPanel cPanel;
-	private static Dimension pnlSize;
+	public static Dimension pnlSize;
 	private int mouseCount;
 	private int catCount;
 	private static String status = "Status";
 	private Color backgroudColor = Color.gray;
-	
+
 	private List<MouseFood> foodList = new CopyOnWriteArrayList<>();
 	// private List<Cat> catList = new ArrayList<>();
     private List<Cat> catList = new CopyOnWriteArrayList<>();
@@ -58,7 +57,20 @@ public class MousePanel extends JPanel implements ActionListener {
 		t.start();
 		
 		addMouseListener(new MyMouseAdapter());
-		addKeyListener(new MyKeyAdapter());
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((e) -> {
+			if (e.getKeyCode() == KeyEvent.VK_D && e.isShiftDown() && e.getID() == KeyEvent.KEY_PRESSED) {
+					for(Mouse mouse: mouseList) {
+						mouse.setShowInfo(!mouse.getShowInfo());
+					}
+				for (Cat cat : catList) {
+					cat.setShowInfo(!cat.getShowInfo());
+				}
+
+			}
+			return false;
+		});
+
+
 		
 		//this method allows u to call a new food under a certain time.
 //		Runnable r = new Runnable() {
@@ -81,13 +93,17 @@ public class MousePanel extends JPanel implements ActionListener {
 //		};
 //		(new Thread(r)).start();
 	}
-	
-	public static void setStatus(String st) {
-		status = st;
-	}
-	
+
 	public String getStatus() {
-		return status;
+		Animal animal = GameManager.getInstance().getSelectedAnimal();
+		if(animal != null){
+			String[] statusInfo = animal.getStatus();
+			return statusInfo[0] + "/" + statusInfo[1] + "/" + statusInfo[2];
+		}
+		else{
+			return "Status";
+		}
+
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -159,19 +175,37 @@ public class MousePanel extends JPanel implements ActionListener {
 			}
 		}
 
+		// check touch the wall, if touched bounce immediately.
+		for(Mouse m : mouseList){
+			int x = getX();
+			if(x<=0 || x>=pnlSize.getWidth()){
+
+			}
+		}
+
 		//4. check cat/cat collision, if find change cat speed angle, if not go to 4.1
 		//4.1 check cat chaseFood mouse, adjust speed angle.
 		//5. check mouse/mouse collision, if find change mouse speed angel, if not go 5.1.
 		//5. check mouse chaseFood food, adjust speed angle.
-		colliableOrChaseFood(catList,mouseList);
-		colliableOrChaseFood(mouseList,foodList);
+		for( int i = 0;i<catList.size();i++){
+			catList.get(i).makeMoveDicision(null,catList.subList(i+1,catList.size()),mouseList);
+		}
+		for( int i = 0;i<mouseList.size();i++){
+			mouseList.get(i).makeMoveDicision(catList,mouseList.subList(i+1,mouseList.size()),foodList);
+		}
+		//colliableOrChaseFood(catList,mouseList);
+		//colliableOrChaseFood(mouseList,foodList);
 
 		repaint();
 	}
-	
 	//T refers to subclass of Food, colliableOrChaseFood method need two lists, the list of subclass of animal and the list of subclass of food
 	private <T extends Food> void colliableOrChaseFood(List<? extends Animal> animals, List<T> foods){
 		for(int i = 0;i<animals.size();i++){
+
+			if(animals.get(i).bounceOnWall(pnlSize)){
+				continue;
+			}
+
 			//for animal within animal size, if collision is false
 			boolean iscollision = false;
 			Animal animal1 = animals.get(i);
@@ -196,42 +230,37 @@ public class MousePanel extends JPanel implements ActionListener {
 			}
 		}
 	}
-	
+
 	private class MyMouseAdapter extends MouseAdapter {
-		public void mousePressed(MouseEvent e) {	
-			if(e.isControlDown()) {
-				for(MouseFood food: foodList) {
-					if (food.checkMouseHit(e))  {
-							foodList.remove(food);		
+		public void mousePressed(MouseEvent e) {
+			if (e.isControlDown()) {
+				for (MouseFood food : foodList) {
+					if (food.checkMouseHit(e)) {
+						foodList.remove(food);
 					}
 				}
-			}else {
-				MouseFood food = new MouseFood(e.getX(), e.getY(), 
-						   Math.min(size.width,size.height)/(int)Util.random(20, 40));
-							foodList.add(food);	
-			}
-		}
-	}
-
-	public class MyKeyAdapter extends KeyAdapter {
-		@Override
-		public void keyPressed(KeyEvent e) {
-			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-				System.out.print("space");
-				for(Mouse mouse: mouseList) {
-					if(mouse.getShow() == true) {
-						System.out.println("false");
-						
-						mouse.setShow(false);
-					} else
-						mouse.setShow(true);
-					System.out.println("True");
-
+			} else if (e.isShiftDown()) {
+				mouseList.forEach(m -> {
+					if (m.checkMouseHit(e)) {
+						GameManager.getInstance().setSeletedAnimal(m);
+						m.setShowInfo(!m.getShowInfo());
 					}
+				});
+				catList.forEach(c -> {
+					if (c.checkMouseHit(e)) {
+						GameManager.getInstance().setSeletedAnimal(c);
+						c.setShowInfo(!c.getShowInfo());
+					}
+				});
+
+			} else {
+				MouseFood food = new MouseFood(e.getX(), e.getY(),
+						Math.min(size.width, size.height) / (int) Util.random(20, 40));
+				foodList.add(food);
 			}
 		}
 	}
-	
+
 	public int countMouse(Class<?> className) {
 		if (className == Mouse.class) return Util.countMouse(className, mouseList);
 		return Util.countMouse(className, mouseList);

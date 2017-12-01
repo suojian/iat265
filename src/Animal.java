@@ -1,11 +1,8 @@
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.util.List;
+import java.util.function.Consumer;
 
 import processing.core.PVector;
 
@@ -22,9 +19,12 @@ public abstract class Animal implements Collide{
 	private double energy;
 	protected float maxSpeed;
 	private long previousCollabTime = 0;
-	private boolean Show = true;
+	private boolean showInfo = true;
 	private float accSpeed = 1;
-	
+	private static PVector verticalWall = new PVector(0,60f),horizontalWall = new PVector(60f,0);
+	private Color originalBodyColor;
+
+
 	public final static double FULL_ENERGY = 1000;
 	
 	public Animal (int x, int y, int sizeX, int sizeY,int speedX, int speedY, Color eyeColor, Color bodyColore, float scale) {
@@ -32,10 +32,19 @@ public abstract class Animal implements Collide{
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.bodyColore = bodyColore;
+		originalBodyColor = bodyColore;
 		this.eyeColor = eyeColor;
 		this.setScale(scale);
 		maxSpeed = Util.random(3.0, 5.0);
 		this.speed = Util.randomPVector(maxSpeed);
+	}
+
+	public void setSelected(Color selectedColor){
+		this.bodyColore = selectedColor;
+	}
+
+	public void deselected(){
+		this.bodyColore = originalBodyColor;
 	}
 	
 	public int getX() {
@@ -115,12 +124,12 @@ public abstract class Animal implements Collide{
 		energyChanged(energy);
 	}
 	
-	public void setShow(final boolean show) {
-		this.Show = show;
+	public void setShowInfo(final boolean showInfo) {
+		this.showInfo = showInfo;
 	}
 	
-	public boolean getShow() {
-		return Show;
+	public boolean getShowInfo() {
+		return showInfo;
 	}
 	
 	protected abstract void energyChanged(double newEnergy);
@@ -193,6 +202,21 @@ public abstract class Animal implements Collide{
 	}
 
 
+	public boolean bounceOnWall(Dimension activityRange){
+		if(pos.x<=0 || pos.x >= activityRange.getWidth()){
+			reflect(this.speed,Animal.verticalWall);
+			return true;
+		}
+		else if(pos.y <=0 || pos.y>=activityRange.getHeight()){
+			reflect(this.speed,Animal.horizontalWall);
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+
 	//reflect when bounce, target is the speed that will be reflected, mirror is the speed that would not change
 	private void reflect(PVector target, PVector mirror){
 		float targetHeading = target.heading();
@@ -214,21 +238,22 @@ public abstract class Animal implements Collide{
 		else if (this instanceof Cat) type = "Cat";
 		return type;
 	}
-	
+
+	public String[] getStatus(){
+		return new String[]{"Size     : " + String.format("%.2f", scale), "Speed  : " + String.format("%.2f", speed.mag()),"Energy : " + String.format("%.2f", energy) };
+	}
 	protected void drawInfo(Graphics2D g) {
 		
-		if(Show == true) {
+		if(showInfo == true) {
 			AffineTransform at = g.getTransform();
 			g.translate(pos.x, pos.y);
-			
-			String st0 = "Size     : " + String.format("%.2f", scale);
-			String st1 = "Speed  : " + String.format("%.2f", speed.mag());
-			String st2 = "Energy : " + String.format("%.2f", energy);
-			
+
+			String[] statusInfo = getStatus();
+
 			Font f = new Font("Courier", Font.PLAIN, 12);
 			FontMetrics metrics = g.getFontMetrics(f);
 			
-			float textWidth = metrics.stringWidth(st2);
+			float textWidth = metrics.stringWidth(statusInfo[2]);
 			float textHeight = metrics.getHeight();
 			float margin = 12, spacing = 6;
 			
@@ -241,40 +266,40 @@ public abstract class Animal implements Collide{
 			g.setColor(Color.blue.darker());
 			g.drawString(this.animalType(), -metrics.stringWidth(this.animalType())/2,  -getSizeY()*getScale()*.75f - margin - (textHeight + spacing)*4f);
 			g.setColor(Color.black);
-			g.drawString(st0, -textWidth/2, -getSizeY()*getScale()*.75f - margin - (textHeight + spacing)*2f);
-			g.drawString(st1, -textWidth/2, -getSizeY()*getScale()*.75f - margin - (textHeight + spacing)*1f);
+			g.drawString(statusInfo[0], -textWidth/2, -getSizeY()*getScale()*.75f - margin - (textHeight + spacing)*2f);
+			g.drawString(statusInfo[1], -textWidth/2, -getSizeY()*getScale()*.75f - margin - (textHeight + spacing)*1f);
 			if (energy < FULL_ENERGY*.3f) g.setColor(Color.red);
-			g.drawString(st2, -textWidth/2, -getSizeY()*getScale()*.75f - margin);
+			g.drawString(statusInfo[2], -textWidth/2, -getSizeY()*getScale()*.75f - margin);
 			g.setTransform(at);
-		}else if(Show == false) {
-			AffineTransform at = g.getTransform();
-			g.translate(pos.x+50000, pos.y+50000);
-			
-			String st0 = "Size     : " + String.format("%.2f", scale);
-			String st1 = "Speed  : " + String.format("%.2f", speed.mag());
-			String st2 = "Energy : " + String.format("%.2f", energy);
-			
-			Font f = new Font("Courier", Font.PLAIN, 12);
-			FontMetrics metrics = g.getFontMetrics(f);
-			
-			float textWidth = metrics.stringWidth(st2);
-			float textHeight = metrics.getHeight();
-			float margin = 12, spacing = 6;
-			
-			g.setColor(new Color(255,255,255,60));
-			g.fillRect((int)(-textWidth/2-margin), 
-					(int)(-getSizeY()*getScale()*.75f - textHeight*5f - spacing*4f - margin*2f), 
-					(int)(textWidth + margin*2f), 
-					(int)(textHeight*5f + spacing*4f + margin*2f));
-			
-			g.setColor(Color.blue.darker());
-			g.drawString(this.animalType(), -metrics.stringWidth(this.animalType())/2,  -getSizeY()*getScale()*.75f - margin - (textHeight + spacing)*4f);
-			g.setColor(Color.black);
-			g.drawString(st0, -textWidth/2, -getSizeY()*getScale()*.75f - margin - (textHeight + spacing)*2f);
-			g.drawString(st1, -textWidth/2, -getSizeY()*getScale()*.75f - margin - (textHeight + spacing)*1f);
-			if (energy < FULL_ENERGY*.3f) g.setColor(Color.red);
-			g.drawString(st2, -textWidth/2, -getSizeY()*getScale()*.75f - margin);
-			g.setTransform(at);
+		}else if(showInfo == false) {
+//			AffineTransform at = g.getTransform();
+//			g.translate(pos.x+50000, pos.y+50000);
+//
+//			String st0 = "Size     : " + String.format("%.2f", scale);
+//			String st1 = "Speed  : " + String.format("%.2f", speed.mag());
+//			String st2 = "Energy : " + String.format("%.2f", energy);
+//
+//			Font f = new Font("Courier", Font.PLAIN, 12);
+//			FontMetrics metrics = g.getFontMetrics(f);
+//
+//			float textWidth = metrics.stringWidth(st2);
+//			float textHeight = metrics.getHeight();
+//			float margin = 12, spacing = 6;
+//
+//			g.setColor(new Color(255,255,255,60));
+//			g.fillRect((int)(-textWidth/2-margin),
+//					(int)(-getSizeY()*getScale()*.75f - textHeight*5f - spacing*4f - margin*2f),
+//					(int)(textWidth + margin*2f),
+//					(int)(textHeight*5f + spacing*4f + margin*2f));
+//
+//			g.setColor(Color.blue.darker());
+//			g.drawString(this.animalType(), -metrics.stringWidth(this.animalType())/2,  -getSizeY()*getScale()*.75f - margin - (textHeight + spacing)*4f);
+//			g.setColor(Color.black);
+//			g.drawString(st0, -textWidth/2, -getSizeY()*getScale()*.75f - margin - (textHeight + spacing)*2f);
+//			g.drawString(st1, -textWidth/2, -getSizeY()*getScale()*.75f - margin - (textHeight + spacing)*1f);
+//			if (energy < FULL_ENERGY*.3f) g.setColor(Color.red);
+//			g.drawString(st2, -textWidth/2, -getSizeY()*getScale()*.75f - margin);
+//			g.setTransform(at);
 		}
 	}
 
@@ -285,8 +310,47 @@ public abstract class Animal implements Collide{
 	public void setAccSpeed(float accSpeed) {
 		this.accSpeed = accSpeed;
 	}
-	
 
-	
 
+	public boolean checkMouseHit(MouseEvent e) {
+		return (Math.abs(e.getX() - pos.x) < sizeX/2) &&
+				(Math.abs(e.getY() - pos.y) < sizeY/2);
+	}
+
+	public void makeMoveDicision( List<? extends Animal> predatorList,List<? extends Animal> otherAnimalList, List<? extends Food> foodList){
+		if (bounceOnWall(MousePanel.pnlSize)){
+			return;
+		}
+		if(predatorList!=null && predatorList.size() > 0 && this instanceof Visionable){
+			Visionable v = (Visionable)this;
+			for (Animal pd: predatorList) {
+				if(v.canSee(pd)){
+					speed.rotate((float)Math.PI);
+					return;
+				}
+			}
+		}
+
+		boolean iscollision = false;
+		if(otherAnimalList != null && otherAnimalList.size() > 0){
+			for(Animal animal2: otherAnimalList){
+				//for animal start after the current animal
+				//if animal1 collide to animal 2, they bounce , assign collision to true.
+				if(this.collide(animal2)){
+					if (this.bounceIfNeed(animal2)) {
+						iscollision = true;
+						break;
+					}
+					//jump out of the loop
+				}
+			}
+		}
+
+		if(!iscollision){
+			Food food = findClosedFood(foodList);
+			if(food != null){
+				chaseFood(food);
+			}
+		}
+	}
 }
