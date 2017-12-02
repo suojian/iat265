@@ -1,9 +1,8 @@
-import processing.core.PVector;
+package module;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -22,19 +21,18 @@ public class MousePanel extends JPanel implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	private List<Mouse> mouseList = new CopyOnWriteArrayList<>();
-    // private List<Mouse> mouseList = new ArrayList<>();
+    // private List<module.Mouse> mouseList = new ArrayList<>();
 	private Timer t;
 	private Dimension size;
 	public boolean c = true;
 	private static ControlPanel cPanel;
 	public static Dimension pnlSize;
-	private int mouseCount;
 	private int catCount;
 	private static String status = "Status";
 	private Color backgroudColor = Color.gray;
 
 	private List<MouseFood> foodList = new CopyOnWriteArrayList<>();
-	// private List<Cat> catList = new ArrayList<>();
+	// private List<module.Cat> catList = new ArrayList<>();
     private List<Cat> catList = new CopyOnWriteArrayList<>();
     
     
@@ -45,7 +43,7 @@ public class MousePanel extends JPanel implements ActionListener {
 		this.setPreferredSize(pnlSize);
 
 		size = pnlSize;
-		for(int i = 0;i<5;i++) {
+		for(int i = 0;i<GameManager.getInstance().getMaxMouseAllowed();i++) {
 			generateMouse();
 		}
 		
@@ -79,9 +77,9 @@ public class MousePanel extends JPanel implements ActionListener {
 //			public void run() {
 //				while(true) {
 //				try {
-//					Thread.sleep((long)Util.random(500,2000));
-//					MouseFood food = new MouseFood((int)Util.random(10,size.width - 10),(int)Util.random(10,size.height - 10) , 
-//							   Math.min(size.width,size.height)/(int)Util.random(20, 40));
+//					Thread.sleep((long)module.Util.random(500,2000));
+//					module.MouseFood food = new module.MouseFood((int)module.Util.random(10,size.width - 10),(int)module.Util.random(10,size.height - 10) ,
+//							   Math.min(size.width,size.height)/(int)module.Util.random(20, 40));
 //								foodList.add(food);	
 //				}
 //				catch(Exception e) {
@@ -92,6 +90,7 @@ public class MousePanel extends JPanel implements ActionListener {
 //			
 //		};
 //		(new Thread(r)).start();
+		GameManager.getInstance().setMousePanel(this);
 	}
 
 	public String getStatus() {
@@ -137,7 +136,6 @@ public class MousePanel extends JPanel implements ActionListener {
 				if(cat.collide(mouse)){
 					cat.takeFood(mouse);
 					mouseList.remove(mouse);
-					mouseCount --;
 					generateMouse();
 				}
 			}
@@ -149,7 +147,6 @@ public class MousePanel extends JPanel implements ActionListener {
 			Mouse m = it.next();
 			if(!m.isAlive()){
 				mouseList.remove(m);
-				mouseCount --;
                 generateMouse();
 			}
 		}
@@ -237,8 +234,9 @@ public class MousePanel extends JPanel implements ActionListener {
 	
 	//randomize the speed, color of the eye, and the initial weight of the mouse
 	public void generateMouse() {
-		mouseList.add(Util.randomMouse(pnlSize));
-		mouseCount++;
+		while (mouseList.size()<GameManager.getInstance().getMaxMouseAllowed()) {
+			mouseList.add(Util.randomMouse(pnlSize));
+		}
 	}
 	
 	public void generateCat() {
@@ -265,6 +263,20 @@ public class MousePanel extends JPanel implements ActionListener {
 	public void setBackgroudColor(Color backgroudColor) {
 		this.backgroudColor = backgroudColor;
 	}
+
+	public void updateMouseAsFoodRate( double rate){
+		mouseList.forEach(m->m.setMouseAsFoodRate(rate));
+	}
+
+	public void updateMouseBodyColor( Color color){
+		mouseList.forEach(m->m.setBodyColore(color));
+	}
+
+	public void updateMouseEnergyDecreaseRate( double rate){
+		mouseList.forEach(m->m.setEnergyDecreaseRate(rate));
+	}
+
+
 
 }
 	

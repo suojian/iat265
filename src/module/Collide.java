@@ -1,3 +1,5 @@
+package module;
+
 import java.awt.Shape;
 
 public interface Collide {

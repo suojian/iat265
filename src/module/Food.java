@@ -1,3 +1,5 @@
+package module;
+
 import processing.core.PVector;
 
 public interface Food extends Collide {

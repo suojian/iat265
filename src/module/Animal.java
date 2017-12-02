@@ -1,8 +1,9 @@
+package module;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.util.List;
-import java.util.function.Consumer;
 
 import processing.core.PVector;
 
@@ -24,6 +25,7 @@ public abstract class Animal implements Collide{
 	private float accSpeed = 1;
 	private static PVector verticalWall = new PVector(0,60f),horizontalWall = new PVector(60f,0);
 	private Color originalBodyColor;
+	private double energyDecreaseRate = GameManager.getInstance().getMouseEnergyDecreaseRate();
 
 
 
@@ -142,7 +144,7 @@ public abstract class Animal implements Collide{
 	}
 	
 	protected void decreaseEnergy() {
-		setEnergy(energy - FULL_ENERGY/(30*10));
+		setEnergy(energy - FULL_ENERGY*energyDecreaseRate);
 	}
 	
 	public boolean isAlive() {
@@ -236,8 +238,8 @@ public abstract class Animal implements Collide{
 	
 	private String animalType() {
 		String type = "unknown animal";
-		if (this instanceof Mouse) type = "Mouse";
-		else if (this instanceof Cat) type = "Cat";
+		if (this instanceof Mouse) type = "module.Mouse";
+		else if (this instanceof Cat) type = "module.Cat";
 		return type;
 	}
 
@@ -355,5 +357,13 @@ public abstract class Animal implements Collide{
 				chaseFood(food);
 			}
 		}
+	}
+
+	public double getEnergyDecreaseRate() {
+		return energyDecreaseRate;
+	}
+
+	public void setEnergyDecreaseRate(double energyDecreaseRate) {
+		this.energyDecreaseRate = energyDecreaseRate;
 	}
 }

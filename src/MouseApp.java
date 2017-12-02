@@ -1,8 +1,8 @@
+import gui.GlobalMousePropertiesDialog;
+import module.ControlPanel;
+import module.MousePanel;
+
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.*;
 //bonus animal gracefully turn around towards the new food source
@@ -53,28 +53,44 @@ public class MouseApp extends JFrame {
 
 
 
-//Mouse Menu sub menu
+//module.Mouse Menu sub menu
 		menuItem = new JMenuItem("Existing Mouse Properties");
 		sysMenu.add(menuItem);
+
+        menuItem.addActionListener((e)->{
+			JDialog d = new GlobalMousePropertiesDialog(this,Dialog.ModalityType.APPLICATION_MODAL);
+			d.setSize(300,300);
+			d.setVisible(true);
+
+//           JFrame f = new MouseExistingPropertiesDialog();
+//            f.setLayout(new FlowLayout(FlowLayout.LEFT, 12, 5));
+//            f.setSize(300,300);
+//
+//            JDialog d = new JDialog(f,Dialog.ModalityType.APPLICATION_MODAL);
+//            d.setSize(300,300);
+//            d.setVisible(true);
+
+
+        });
 
 		menuItem = new JMenuItem("Generate Mouse Properties");
 		sysMenu.add(menuItem);
 
 //Build second menu in the menu bar.
-		sysMenu = new JMenu("Cat Menu");
+		sysMenu = new JMenu("Cat");
 		sysMenu.getAccessibleContext().setAccessibleDescription(
 				"Cat system setup");
 		menuBar.add(sysMenu);
 
-// Cat menu sub menus
+// module.Cat menu sub menus
 		menuItem = new JMenuItem("Existing Cat properties");
 		sysMenu.add(menuItem);
 		
 		menuItem = new JMenuItem("Generate Cat Properties");
 		sysMenu.add(menuItem);
 		
-// build Food menu
-		sysMenu = new JMenu("Food Menu");
+// build module.Food menu
+		sysMenu = new JMenu("Food");
 		sysMenu.getAccessibleContext().setAccessibleDescription("Food system setup");
 		menuBar.add(sysMenu);
 		

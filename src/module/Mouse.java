@@ -1,5 +1,6 @@
+package module;
+
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -7,7 +8,6 @@ import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 import processing.core.PVector;
@@ -30,6 +30,8 @@ public class Mouse extends Animal implements Food,Visionable {
     private double slowSpeedEngeryLevel = 0.3*FULL_ENERGY;
     
     private boolean showStatus = true;
+
+	private double mouseAsFoodRate = GameManager.getInstance().getMouseAsFoodConversionRate();
 
 	private Color earColor;
 	public Mouse (int x, int y, int sizeX, int sizeY,int speedX, int speedY, Color eyeColor) {
@@ -141,7 +143,6 @@ public class Mouse extends Animal implements Food,Visionable {
 		double newEnergy = currentEnergy + food.getFoodEnergy();
 		if (newEnergy > FULL_ENERGY*1.1) {
 			setScale(getScale() + 0.1f);
-            System.out.println("Scale up " + getScale());
             newEnergy = 900;
 		}
 		setEnergy(newEnergy);
@@ -182,7 +183,7 @@ public class Mouse extends Animal implements Food,Visionable {
 	//food energy when mouse as a food
 	@Override
 	public double getFoodEnergy() {
-		return getEnergy()*0.5;
+		return getEnergy()*mouseAsFoodRate;
 	}
 
 	@Override
@@ -192,5 +193,13 @@ public class Mouse extends Animal implements Food,Visionable {
 		at.rotate(getSpeed().heading());
 		at.scale(getScale(), getScale());
 		return at.createTransformedShape(visionBox);
+	}
+
+	public double getMouseAsFoodRate() {
+		return mouseAsFoodRate;
+	}
+
+	public void setMouseAsFoodRate(double mouseAsFoodRate) {
+		this.mouseAsFoodRate = mouseAsFoodRate;
 	}
 }

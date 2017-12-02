@@ -1,7 +1,8 @@
+package module;
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -39,7 +40,7 @@ public class ControlPanel extends JPanel {
 	}
 
 	private void setComponentAttributes() {
-		status = new JLabel("Selected Animal Status...");
+		status = new JLabel("Selected module.Animal Status...");
 		bottomContainer = new Container();
 		// flow layout allow to add multiple component together
 		bottomContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 12, 5));
@@ -47,7 +48,7 @@ public class ControlPanel extends JPanel {
 
 		// 2nd step
 		// add mouse
-		addMouse = new JButton("Add a new Mouse");
+		addMouse = new JButton("Add a new module.Mouse");
 		addMouse.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -59,7 +60,7 @@ public class ControlPanel extends JPanel {
 		topContainer.add(addMouse);
 
 		// add cat
-		addCat = new JButton("Add a new Cat");
+		addCat = new JButton("Add a new module.Cat");
 		addCat.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -69,11 +70,11 @@ public class ControlPanel extends JPanel {
 		topContainer.add(addCat);
 
 		// increase mouse speed
-		insC = new JButton("Increase Mouse Speed");
+		insC = new JButton("Increase module.Mouse Speed");
 		insC.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mousePanel.accelerateMouseSpeed(1.1f);
+				mousePanel.accelerateMouseSpeed(1.01f);
 			}
 		});
 		topContainer.add(insC);
@@ -89,7 +90,7 @@ public class ControlPanel extends JPanel {
 		topContainer.add(screenColor);
 		
 		//food color
-		foodColor = new JButton("Change Food Color");
+		foodColor = new JButton("Change module.Food Color");
 		foodColor.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -99,7 +100,7 @@ public class ControlPanel extends JPanel {
 		topContainer.add(foodColor);
 
 		// 3rd step
-		mouseNumLabel = new JLabel("Number of Mouse:");
+		mouseNumLabel = new JLabel("Number of module.Mouse:");
 		mouseNumTextField = new JTextField(5);
 		mouseNumTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		mouseNumTextField.setFocusable(false);
@@ -107,7 +108,7 @@ public class ControlPanel extends JPanel {
 		centerContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 12, 5));
 		centerContainer.add(mouseNumLabel);
 		centerContainer.add(mouseNumTextField);
-		catNumLabel = new JLabel("Number of Cat:");
+		catNumLabel = new JLabel("Number of module.Cat:");
 		catNumTextField = new JTextField(5);
 		catNumTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		catNumTextField.setFocusable(false);
