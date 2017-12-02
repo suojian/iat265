@@ -18,13 +18,14 @@ public class Cat extends Animal {
 	private Area bBox;
 	private static Color normalBodyColor = new Color(150, 50, 50);
 	private static Color sickBodyColor = new Color(150, 50, 150);
+
 	public Cat(int x, int y, int sizeX, int sizeY, int speedX, int speedY, Color eyeColor) {
-		super(x, y, sizeX, sizeY, speedX, speedY, eyeColor, normalBodyColor, Util.random(0.15d, 0.35d));
+		super(x, y, sizeX, sizeY, speedX, speedY, eyeColor, normalBodyColor, Util.random(0.15d, 0.35d),GameManager.getInstance().getCatMaxSpeed(),GameManager.getInstance().getCatEnergyDecreaseRate());
 		setShapeAttributes();
-		setEnergy(FULL_ENERGY);
+		setEnergy(GameManager.getInstance().getCatFullEnergy());
 	}
     private boolean speedReduced = false;
-    private double slowSpeedEngeryLevel = 0.3*FULL_ENERGY;
+    private double slowSpeedEngeryLevel = 0.3*getFullEnergy();
 
 	@Override
 	protected synchronized void energyChanged(double newEnergy) {

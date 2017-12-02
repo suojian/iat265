@@ -25,13 +25,11 @@ public abstract class Animal implements Collide{
 	private float accSpeed = 1;
 	private static PVector verticalWall = new PVector(0,60f),horizontalWall = new PVector(60f,0);
 	private Color originalBodyColor;
-	private double energyDecreaseRate = GameManager.getInstance().getMouseEnergyDecreaseRate();
-	
+	private double energyDecreaseRate;
 
-
-	public final static double FULL_ENERGY = 1000;
+	private double fullEnergy = 1000;
 	
-	public Animal (int x, int y, int sizeX, int sizeY,int speedX, int speedY, Color eyeColor, Color bodyColore, float scale) {
+	public Animal (int x, int y, int sizeX, int sizeY,int speedX, int speedY, Color eyeColor, Color bodyColore, float scale, float initialSpeed, double energyDecreaseRate) {
 		this.pos = new PVector(x,y);
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
@@ -39,8 +37,9 @@ public abstract class Animal implements Collide{
 		originalBodyColor = bodyColore;
 		this.eyeColor = eyeColor;
 		this.setScale(scale);
-		maxSpeed = Util.random(3.0, 5.0);
+		maxSpeed = initialSpeed;
 		this.speed = Util.randomPVector(maxSpeed);
+		this.energyDecreaseRate = energyDecreaseRate;
 	}
 
 	public void setSelected(Color selectedColor){
@@ -144,7 +143,7 @@ public abstract class Animal implements Collide{
 	}
 	
 	protected void decreaseEnergy() {
-		setEnergy(energy - FULL_ENERGY*energyDecreaseRate);
+		setEnergy(energy - fullEnergy*energyDecreaseRate);
 	}
 	
 	public boolean isAlive() {
@@ -272,7 +271,7 @@ public abstract class Animal implements Collide{
 			g.setColor(Color.black);
 			g.drawString(statusInfo[0], -textWidth/2, -getSizeY()*getScale()*.75f - margin - (textHeight + spacing)*2f);
 			g.drawString(statusInfo[1], -textWidth/2, -getSizeY()*getScale()*.75f - margin - (textHeight + spacing)*1f);
-			if (energy < FULL_ENERGY*.3f) g.setColor(Color.red);
+			if (energy < fullEnergy*.3f) g.setColor(Color.red);
 			g.drawString(statusInfo[2], -textWidth/2, -getSizeY()*getScale()*.75f - margin);
 			g.setTransform(at);
 		}else if(showInfo == false) {
@@ -365,5 +364,13 @@ public abstract class Animal implements Collide{
 
 	public void setEnergyDecreaseRate(double energyDecreaseRate) {
 		this.energyDecreaseRate = energyDecreaseRate;
+	}
+
+	public double getFullEnergy() {
+		return fullEnergy;
+	}
+
+	public void setFullEnergy(double fullEnergy) {
+		this.fullEnergy = fullEnergy;
 	}
 }

@@ -13,7 +13,12 @@ public class GameManager {
     private double mouseEnergyDecreaseRate = 0.003;
     private Color mouseBodyColorDefault = new Color(50,50,50);
     private MousePanel mousePanel;
-
+    private double[] maxMouseSpeedRange = {3.0,5.0};
+    private double[] maxCatSpeedRange = {3.0,5.0};
+    private int mouseFullEnergy = 1000;
+    private int catFullEnergy = 1000;
+    private float mouseVisionRangeRate = 1.0f;
+    private double catEnergyDecreaseRate = 0.003;
 
     public static GameManager getInstance(){
         return manager;
@@ -80,6 +85,63 @@ public class GameManager {
 
     public void setMouseBodyColorDefault(Color mouseBodyColorDefault) {
         this.mouseBodyColorDefault = mouseBodyColorDefault;
+    }
+
+    public double[] getMaxMouseSpeedRange() {
+        return maxMouseSpeedRange;
+    }
+
+    public void setMaxMouseSpeedRange(double[] maxMouseSpeedRange) {
+        this.maxMouseSpeedRange = maxMouseSpeedRange;
+    }
+
+    public double[] getMaxCatSpeedRange() {
+        return maxCatSpeedRange;
+    }
+
+    public void setMaxCatSpeedRange(double[] maxCatSpeedRange) {
+        this.maxCatSpeedRange = maxCatSpeedRange;
+    }
+
+    public float getMouseMaxSpeed(){
+        return Util.random(maxMouseSpeedRange[0],maxMouseSpeedRange[1]);
+    }
+
+    public float getCatMaxSpeed(){
+        return Util.random(maxCatSpeedRange[0],maxCatSpeedRange[1]);
+    }
+
+
+    public int getMouseFullEnergy() {
+        return mouseFullEnergy;
+    }
+
+    public void setMouseFullEnergy(int mouseFullEnergy) {
+        this.mouseFullEnergy = mouseFullEnergy;
+    }
+
+    public int getCatFullEnergy() {
+        return catFullEnergy;
+    }
+
+    public void setCatFullEnergy(int catFullEnergy) {
+        this.catFullEnergy = catFullEnergy;
+    }
+
+    public float getMouseVisionRangeRate() {
+        return mouseVisionRangeRate;
+    }
+
+    public void setMouseVisionRangeRate(float mouseVisionRangeRate) {
+        this.mouseVisionRangeRate = mouseVisionRangeRate;
+    }
+
+    public double getCatEnergyDecreaseRate() {
+        return catEnergyDecreaseRate;
+    }
+
+    public void setCatEnergyDecreaseRate(double catEnergyDecreaseRate) {
+        this.catEnergyDecreaseRate = catEnergyDecreaseRate;
     }
 }
 

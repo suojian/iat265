@@ -27,9 +27,11 @@ public class Mouse extends Animal implements Food,Visionable {
 	private Area bBox;
 	private Area visionBox;
     private boolean speedReduced = false;
-    private double slowSpeedEngeryLevel = 0.3*FULL_ENERGY;
+    private double slowSpeedEngeryLevel = 0.3*getFullEnergy();
 	private double speedMin;
 	private double speedMax;
+	private GameManager gameManager = GameManager.getInstance();
+	private float visionRangeRate = GameManager.getInstance().getMouseVisionRangeRate();
     
     private boolean showStatus = true;
 
@@ -37,9 +39,9 @@ public class Mouse extends Animal implements Food,Visionable {
 
 	private Color earColor;
 	public Mouse (int x, int y, int sizeX, int sizeY,int speedX, int speedY, Color eyeColor) {
-		super(x,y,sizeX,sizeY,speedX,speedY,eyeColor,new Color(50,50,50),0.2f);
+		super(x,y,sizeX,sizeY,speedX,speedY,eyeColor,GameManager.getInstance().getMouseBodyColorDefault(),0.2f,GameManager.getInstance().getMouseMaxSpeed(),  GameManager.getInstance().getMouseEnergyDecreaseRate());
 		setShapeAttributes();
-		setEnergy(FULL_ENERGY);
+		setEnergy(GameManager.getInstance().getMouseFullEnergy());
 	}
 	
 	private void setShapeAttributes() {
@@ -56,7 +58,7 @@ public class Mouse extends Animal implements Food,Visionable {
 		 
 		 // float sight = (float)Math.sqrt(getScale()) * maxSpeed * 500f;
 		 float scale = getScale();
-		 float sight = scale* maxSpeed * 300f;
+		 float sight = scale* maxSpeed * 300f*visionRangeRate;
 		 if (scale > 0.4) {
 			 sight = scale* maxSpeed * 200f;
 		 }
@@ -143,7 +145,7 @@ public class Mouse extends Animal implements Food,Visionable {
 	public void takeFood(Food food) {
 		double currentEnergy = getEnergy();
 		double newEnergy = currentEnergy + food.getFoodEnergy();
-		if (newEnergy > FULL_ENERGY*1.1) {
+		if (newEnergy > getFullEnergy()*1.1) {
 			setScale(getScale() + 0.1f);
             newEnergy = 900;
 		}
