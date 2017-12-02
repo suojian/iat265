@@ -1,3 +1,5 @@
+import gui.ExistingCatPropertiesDialog;
+import gui.ExistingFoodPropertiesDialog;
 import gui.ExistingMousePropertiesDialog;
 import gui.NewMousePropertiesDialog;
 import module.ControlPanel;
@@ -57,7 +59,6 @@ public class MouseApp extends JFrame {
 //module.Mouse Menu sub menu
 		menuItem = new JMenuItem("Existing Mouse Properties");
 		sysMenu.add(menuItem);
-
         menuItem.addActionListener((e)->{
 			JDialog d = new ExistingMousePropertiesDialog(this,Dialog.ModalityType.APPLICATION_MODAL);
 			d.setSize(300,300);
@@ -82,7 +83,14 @@ public class MouseApp extends JFrame {
 
 // module.Cat menu sub menus
 		menuItem = new JMenuItem("Existing Cat properties");
+		menuItem.addActionListener((e)->{
+			JDialog d2 = new ExistingCatPropertiesDialog(this,Dialog.ModalityType.APPLICATION_MODAL);
+			d2.setSize(300,300);
+			d2.setVisible(true);
+
+        });
 		sysMenu.add(menuItem);
+
 		
 		menuItem = new JMenuItem("Generate Cat Properties");
 		sysMenu.add(menuItem);
@@ -93,6 +101,12 @@ public class MouseApp extends JFrame {
 		menuBar.add(sysMenu);
 		
 		menuItem = new JMenuItem("Existing Food properties");
+		menuItem.addActionListener((e)->{
+			JDialog d2 = new ExistingFoodPropertiesDialog(this,Dialog.ModalityType.APPLICATION_MODAL);
+			d2.setSize(300,300);
+			d2.setVisible(true);
+
+        });
 		sysMenu.add(menuItem);
 		
 		menuItem = new JMenuItem("Generate Food properties");
