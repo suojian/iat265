@@ -14,6 +14,7 @@ public class GameManager {
     private Color mouseBodyColorDefault = new Color(50,50,50);
     private MousePanel mousePanel;
 
+
     public static GameManager getInstance(){
         return manager;
     }

@@ -6,11 +6,11 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class GlobalMousePropertiesDialog extends JDialog {
-    private String[] labels = {"Maximum mouse allowed: ", "Mouse as food conversion rate: ", "Mouse body color: ", "Enery decrease reate: "};
-    private JTextField[] fields = {new JTextField(7),new JTextField(7),new JTextField(7),new JTextField(7)};
+public class NewMousePropertiesDialog extends JDialog {
+    private String[] labels = {"Mouse min speed: ", "Mouse max speed:", "Mouse max energy:" , "Mouse vision range rate: ", "Mouse as food conversion rate: ", "Mouse body color: ", "Enery decrease reate: "};
+    private JTextField[] fields = {new JTextField(7),new JTextField(7),new JTextField(7),new JTextField(7),new JTextField(7),new JTextField(7),new JTextField(7)};
     private GameManager gameManager = GameManager.getInstance();
-    public GlobalMousePropertiesDialog(Window owner, ModalityType modalityType){
+    public NewMousePropertiesDialog(Window owner, ModalityType modalityType){
         super(owner,modalityType);
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
@@ -56,7 +56,7 @@ public class GlobalMousePropertiesDialog extends JDialog {
         String newColorStr = fields[2].getText();
         gameManager.updateMouseBodyColor(new Color(Integer.parseInt(newColorStr.substring(0,2),16),Integer.parseInt(newColorStr.substring(2,4),16),Integer.parseInt(newColorStr.substring(4),16)));
         gameManager.updateMouseEnergyDecreaseRate(Double.valueOf((fields[3].getText())));
-        dispose();
+
     }
 
     private void onClose(){

@@ -28,6 +28,8 @@ public class Mouse extends Animal implements Food,Visionable {
 	private Area visionBox;
     private boolean speedReduced = false;
     private double slowSpeedEngeryLevel = 0.3*FULL_ENERGY;
+	private double speedMin;
+	private double speedMax;
     
     private boolean showStatus = true;
 

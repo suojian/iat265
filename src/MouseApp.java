@@ -1,4 +1,5 @@
-import gui.GlobalMousePropertiesDialog;
+import gui.ExistingMousePropertiesDialog;
+import gui.NewMousePropertiesDialog;
 import module.ControlPanel;
 import module.MousePanel;
 
@@ -58,22 +59,19 @@ public class MouseApp extends JFrame {
 		sysMenu.add(menuItem);
 
         menuItem.addActionListener((e)->{
-			JDialog d = new GlobalMousePropertiesDialog(this,Dialog.ModalityType.APPLICATION_MODAL);
+			JDialog d = new ExistingMousePropertiesDialog(this,Dialog.ModalityType.APPLICATION_MODAL);
 			d.setSize(300,300);
 			d.setVisible(true);
-
-//           JFrame f = new MouseExistingPropertiesDialog();
-//            f.setLayout(new FlowLayout(FlowLayout.LEFT, 12, 5));
-//            f.setSize(300,300);
-//
-//            JDialog d = new JDialog(f,Dialog.ModalityType.APPLICATION_MODAL);
-//            d.setSize(300,300);
-//            d.setVisible(true);
-
 
         });
 
 		menuItem = new JMenuItem("Generate Mouse Properties");
+		menuItem.addActionListener((e)->{
+			JDialog d = new NewMousePropertiesDialog(this,Dialog.ModalityType.APPLICATION_MODAL);
+			d.setSize(300,300);
+			d.setVisible(true);
+
+		});
 		sysMenu.add(menuItem);
 
 //Build second menu in the menu bar.

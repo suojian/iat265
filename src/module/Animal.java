@@ -26,7 +26,7 @@ public abstract class Animal implements Collide{
 	private static PVector verticalWall = new PVector(0,60f),horizontalWall = new PVector(60f,0);
 	private Color originalBodyColor;
 	private double energyDecreaseRate = GameManager.getInstance().getMouseEnergyDecreaseRate();
-
+	
 
 
 	public final static double FULL_ENERGY = 1000;
