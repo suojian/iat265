@@ -2,9 +2,7 @@ package module;
 
 import java.awt.*;
 
-/**
- * Created by jsuo on 2017-11-30.
- */
+
 public interface Visionable {
 
     public Shape getVision();

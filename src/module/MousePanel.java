@@ -47,7 +47,7 @@ public class MousePanel extends JPanel implements ActionListener {
 			generateMouse();
 		}
 		
-		for(int i = 0; i < 2; i++) {
+		for(int i = 0; i < GameManager.getInstance().getMaxCatAllowed(); i++) {
 			generateCat();
 		}
 		
@@ -240,8 +240,10 @@ public class MousePanel extends JPanel implements ActionListener {
 	}
 	
 	public void generateCat() {
+		while(catList.size()<GameManager.getInstance().getMaxCatAllowed()) {
 		catList.add(Util.randomCat(pnlSize));
 		catCount ++;
+		}
 	}
 	
 	public void accelerateMouseSpeed(float accel) {
@@ -271,12 +273,22 @@ public class MousePanel extends JPanel implements ActionListener {
 	public void updateMouseBodyColor( Color color){
 		mouseList.forEach(m->m.setBodyColore(color));
 	}
+	
+	public void updateCatBodyColor( Color color) {
+		catList.forEach(m->m.setBodyColore(color));
+	}
+	
+	public void updateFoodBodyColor( Color color) {
+		foodList.forEach(m->m.setBodyC(color));
+	}
 
 	public void updateMouseEnergyDecreaseRate( double rate){
 		mouseList.forEach(m->m.setEnergyDecreaseRate(rate));
 	}
-
-
-
+	
+	public void updateCatEnergyDecreaseRate( double rate) {
+		catList.forEach(m->m.setEnergyDecreaseRate(rate));
+	}
+	
 }
 	

@@ -3,9 +3,7 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by jsuo on 2017-12-01.
- */
+
 public class SpringUtil {
     /**
      * A debugging utility that prints to stdout the component's minimum,
